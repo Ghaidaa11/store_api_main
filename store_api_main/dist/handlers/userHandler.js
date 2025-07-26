@@ -74,8 +74,7 @@ var index = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
                     jsonwebtoken_1.default.verify(req.body.token, process.env.TOKEN_SECRET || '');
                 }
                 catch (_b) {
-                    res.status(401);
-                    res.json("Not authorized for this request");
+                    return [2 /*return*/, res.status(401).json({ error: "Not authorized for this request" })];
                 }
                 _a.label = 1;
             case 1:
@@ -104,8 +103,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                     jsonwebtoken_1.default.verify(req.body.token, process.env.TOKEN_SECRET || '');
                 }
                 catch (_b) {
-                    res.status(401);
-                    res.json("Not authorized for this request");
+                    return [2 /*return*/, res.status(401).json({ error: "Not authorized for this request" })];
                 }
                 _a.label = 1;
             case 1:
