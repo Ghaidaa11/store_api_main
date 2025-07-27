@@ -1,0 +1,17 @@
+{
+  "dev": {
+    "driver": "pg",
+    "host": "localhost",
+    "database": "store_dev",
+    "user": "Your_PG_User",
+    "password": "Your_PG_PSW"
+  },
+  "test": {
+    "driver": "pg",
+    "host": "localhost",
+    "database": "store_test",
+    "user": "Your_PG_User",
+    "password": "Your_PG_PSW"
+  },
+  "migrations-dir": "migrations"
+}
