@@ -68,11 +68,38 @@ GET /orders/:user_id
 - price
 - [OPTIONAL] category
 
+                                                                Table "public.products"
+  Column  |          Type          | Collation | Nullable |               Default                | Storage  | Compression | Stats target | Description
+----------+------------------------+-----------+----------+--------------------------------------+----------+-------------+--------------+-------------
+ id       | integer                |           | not null | nextval('products_id_seq'::regclass) | plain    |             |              |
+ name     | character varying(255) |           | not null |                                      | extended |             |              |
+ price    | numeric(10,2)          |           | not null |                                      | main     |             |              |
+ category | character varying(255) |           |          |                                      | extended |             |              |
+Indexes:
+    "products_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "order_products" CONSTRAINT "fk_product" FOREIGN KEY (product_id) REFERENCES products(id)
+
+
 #### User
 - id
 - firstName
 - lastName
 - password
+
+
+                                                                 Table "public.users"
+   Column   |          Type          | Collation | Nullable |              Default              | Storage  | Compression | Stats target | Description
+------------+------------------------+-----------+----------+-----------------------------------+----------+-------------+--------------+-------------
+ id         | integer                |           | not null | nextval('users_id_seq'::regclass) | plain    |             |              |
+ first_name | character varying(100) |           | not null |                                   | extended |             |              |
+ last_name  | character varying(100) |           | not null |                                   | extended |             |              |
+ password   | text                   |           | not null |                                   | extended |             |              |
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "orders" CONSTRAINT "fk_user" FOREIGN KEY (user_id) REFERENCES users(id)
+
 
 #### Orders
 - id
@@ -81,3 +108,28 @@ GET /orders/:user_id
 - user_id
 - status of order (active or complete)
 
+                                                               Table "public.orders"
+ Column  |         Type          | Collation | Nullable |              Default               | Storage  | Compression | Stats target | Description
+---------+-----------------------+-----------+----------+------------------------------------+----------+-------------+--------------+-------------
+ id      | integer               |           | not null | nextval('orders_id_seq'::regclass) | plain    |             |              |
+ user_id | integer               |           | not null |                                    | plain    |             |              |
+ status  | character varying(20) |           | not null |                                    | extended |             |              |
+Indexes:
+    "orders_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "fk_user" FOREIGN KEY (user_id) REFERENCES users(id)
+Referenced by:
+    TABLE "order_products" CONSTRAINT "order_products_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+
+                                                         Table "public.order_products"
+   Column   |  Type   | Collation | Nullable |                  Default                   | Storage | Compression | Stats target | Description
+------------+---------+-----------+----------+--------------------------------------------+---------+-------------+--------------+-------------
+ id         | integer |           | not null | nextval('order_products_id_seq'::regclass) | plain   |             |              |
+ order_id   | integer |           | not null |                                            | plain   |             |              |
+ product_id | integer |           | not null |                                            | plain   |             |              |
+ quantity   | integer |           | not null |                                            | plain   |             |              |
+Indexes:
+    "order_products_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "fk_product" FOREIGN KEY (product_id) REFERENCES products(id)
+    "order_products_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE

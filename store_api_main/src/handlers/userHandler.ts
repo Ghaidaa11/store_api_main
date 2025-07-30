@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserStore } from "../models/user";
 import jwt from 'jsonwebtoken'
+import { authorizationHandler } from "../features/util";
 
 
 const store = new UserStore()
@@ -17,8 +18,12 @@ export const create = async (req: Request, res: Response) => {
 }
 
 export const index = async (req: Request, res: Response) => {
+    
+        const token: string = authorizationHandler(req, res)
+
     try {
-        jwt.verify(req.body.token, process.env.TOKEN_SECRET || '')
+            jwt.verify(token, process.env.TOKEN_SECRET || '')
+
     } catch {
        return res.status(401).json({ error: "Not authorized for this request" })
     }
@@ -32,9 +37,13 @@ export const index = async (req: Request, res: Response) => {
 }
 
 export const show = async (req: Request, res: Response) => {
-    try {
-        jwt.verify(req.body.token, process.env.TOKEN_SECRET || '')
-    } catch {
+        
+        const token = authorizationHandler(req, res)        
+        try {
+
+            jwt.verify(token, process.env.TOKEN_SECRET || '')
+            
+        } catch {
         return res.status(401).json({ error: "Not authorized for this request" })
     }
     try{

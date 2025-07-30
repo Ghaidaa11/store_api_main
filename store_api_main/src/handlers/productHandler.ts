@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express'
 import { ProductStore } from '../models/product'
 import jwt from 'jsonwebtoken'
+import { authorizationHandler } from '../features/util'
 
 
 const store = new ProductStore()
@@ -16,9 +17,13 @@ export const show = async(req: Request, res: Response) => {
 }
 
 export const create = async(req: Request, res: Response) => {
+
+    const token = authorizationHandler(req, res)
+    
     try {
-            jwt.verify(req.body.token, process.env.TOKEN_SECRET || '')
-        } catch {
+            
+        jwt.verify(token, process.env.TOKEN_SECRET || '')
+    } catch {
             return res.status(401).json("Not authorized for this request")
         }
     
